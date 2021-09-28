@@ -278,9 +278,33 @@ int retCantAlumnosDetMat (nodoEx* listaEx, char* asig)
         return 0;
 }
 
-void pasarDnisA_ArregloDinamico (char*** arregloDnis, nodoEx* listaEx)
+void mostrarArreglo (char** dnis, int dim)
 {
-    arregloDnis = malloc(sizeof(char*9*retCantAlumnosDetMat(listaEx, "mates")));
+    for (int i = 0; i < dim; i++)
+        puts(dnis[i]);
+}
+
+void pasarDnisA_ArregloDinamico (char*** arregloDnis, int* dim, nodoEx* listaEx, char* asig)
+{
+    *dim = retCantAlumnosDetMat(listaEx, asig);
+
+    *arregloDnis = (char**)malloc(sizeof(char)*(*dim));
+
+    for (int c = 0; c < 9; c++)
+        (*arregloDnis)[c] = (char*)malloc(sizeof(char)*9);
+
+    int i = 0;
+
+    while (listaEx)
+    {
+        if (strcmpi(listaEx->dato.asignatura, asig) == 0)
+        {
+            strcpy((*arregloDnis)[i], listaEx->dato.dni);
+            i++;
+        }
+
+        listaEx = listaEx->sig;
+    }
 }
 
 /// main
@@ -362,7 +386,9 @@ int main()
     //printf("\nCANTIDAD DE ALUMNOS EN %s: %i", "mates", retCantAlumnosDetMat(listaEx, "mates"));
 
     char** arregloDNIs;
-
+    int dim = 0;
+    pasarDnisA_ArregloDinamico(&arregloDNIs, &dim, listaEx, "mates");
+    mostrarArreglo(arregloDNIs, dim);
 
 
     return 0;
