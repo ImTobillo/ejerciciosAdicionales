@@ -25,6 +25,12 @@ typedef struct nodo
     struct nodo* sig;
 }nodo;
 
+typedef struct
+{
+    int* valores;
+    int tope;
+}Pila;
+
 /// functions
 
 void inicLista (nodo** lista)
@@ -307,6 +313,56 @@ void pasarDnisA_ArregloDinamico (char*** arregloDnis, int* dim, nodoEx* listaEx,
     }
 }
 
+// pila
+
+void inicPila (Pila* p)
+{
+    p->valores = (int*)malloc(sizeof(int)*50);
+    p->tope = -1;
+}
+
+void apilar (Pila* p, int dato)
+{
+    p->valores[++p->tope] = dato;
+}
+
+int tope (Pila p)
+{
+    return p.valores[p.tope];
+}
+
+int desapilar (Pila* p)
+{
+    return p->valores[p->tope--];
+}
+
+int pilavacia (Pila p)
+{
+    return (p.tope == -1);
+}
+
+void mostrarPila (Pila* p)
+{
+    Pila aux;
+    inicPila(&aux);
+
+    printf("\nBASE =======\t");
+
+    while (!pilavacia(*p))
+        apilar(&aux, desapilar(p));
+
+
+
+    while (!pilavacia(aux))
+    {
+        printf("%i\t", aux.valores[aux.tope]);
+        apilar(p, desapilar(&aux));
+    }
+
+    printf("======= TOPE\n");
+
+}
+
 /// main
 
 int main()
@@ -362,7 +418,7 @@ int main()
 
     mostrarLista(listaInter);*/
 
-    nodoEx* listaEx;
+    /*nodoEx* listaEx;
     inicListaEx(&listaEx);
 
     insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
@@ -389,6 +445,23 @@ int main()
     int dim = 0;
     pasarDnisA_ArregloDinamico(&arregloDNIs, &dim, listaEx, "mates");
     mostrarArreglo(arregloDNIs, dim);
+    */
+
+    Pila p;
+    inicPila(&p);
+
+    apilar(&p, 4);
+    apilar(&p, 6);
+    apilar(&p, 5);
+    apilar(&p, 3);
+    apilar(&p, 2);
+    apilar(&p, 1);
+
+    printf("\nTOPE: %i\n", tope(p));
+
+    mostrarPila(&p);
+
+
 
 
     return 0;
