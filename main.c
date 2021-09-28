@@ -213,6 +213,9 @@ void borrarNodoDNI (nodoEx** lista, char* dni)
             if (*lista)
                 (*lista)->ant = aux->ant;
 
+            if (aux->ant)
+                aux->ant->sig = *lista;
+
             free(aux);
 
             borrarNodoDNI(lista, dni);
@@ -220,6 +223,64 @@ void borrarNodoDNI (nodoEx** lista, char* dni)
         else
             borrarNodoDNI(&(*lista)->sig, dni);
     }
+}
+
+void informarPromedioDetMat (nodoEx* listaEx, char* asig)
+{
+    float suma = 0, cant = 0;
+
+    while (listaEx)
+    {
+        if (strcmpi(listaEx->dato.asignatura, asig) == 0)
+        {
+            suma += listaEx->dato.Nota;
+            cant++;
+        }
+
+        listaEx = listaEx->sig;
+    }
+
+    printf("\nEl promedio de notas en %s, es: %.2f", asig, suma/cant);
+}
+
+int verificarDniEnAsig (nodoEx* lista, char* dni, char* asig)
+{
+    if (lista)
+    {
+        if (strcmpi(lista->dato.dni, dni) == 0 && strcmpi(lista->dato.asignatura, asig) == 0)
+            return 1;
+        else
+            return verificarDniEnAsig(lista->sig, dni, asig);
+    }
+    else
+        return 0;
+}
+
+void mostrarListaExRec (nodoEx* listaEx)
+{
+    if (listaEx)
+    {
+        mostrarExamen(listaEx->dato);
+        mostrarListaExRec(listaEx->sig);
+    }
+}
+
+int retCantAlumnosDetMat (nodoEx* listaEx, char* asig)
+{
+    if (listaEx)
+    {
+        if (strcmpi(listaEx->dato.asignatura, asig) == 0)
+            return 1 + retCantAlumnosDetMat(listaEx->sig, asig);
+        else
+            return retCantAlumnosDetMat(listaEx->sig, asig);
+    }
+    else
+        return 0;
+}
+
+void pasarDnisA_ArregloDinamico (char*** arregloDnis, nodoEx* listaEx)
+{
+    arregloDnis = malloc(sizeof(char*9*retCantAlumnosDetMat(listaEx, "mates")));
 }
 
 /// main
@@ -282,11 +343,27 @@ int main()
 
     insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
     insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
-    insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
-    insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
-    insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
+    //insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
+    //insertarDNIOrden(&listaEx, crearNodoEx(cargarExamen()));
 
-    mostrarListaEx(listaEx);
+
+    //mostrarListaEx(listaEx);
+    mostrarListaExRec(listaEx);
+
+
+    //borrarNodoDNI(&listaEx, "44562987");
+
+    //mostrarListaEx(listaEx);
+
+    //informarPromedioDetMat(listaEx, "mates");
+
+    //printf("\nEXISTE DNI %s EN %s? %i\n", "44562987", "mates", verificarDniEnAsig(listaEx, "44562987", "mates"));
+
+    //printf("\nCANTIDAD DE ALUMNOS EN %s: %i", "mates", retCantAlumnosDetMat(listaEx, "mates"));
+
+    char** arregloDNIs;
+
+
 
     return 0;
 }
